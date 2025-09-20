@@ -1,0 +1,31 @@
+<!-- Chatbot Container -->
+<div class="chatbot-container">
+    <!-- Chat Popup Window -->
+    <div class="chat-widget" [class.open]="isChatOpen">
+        <div class="chat-widget-header">
+            <h5>✨ PMS Assistant Bot </h5>
+            <button (click)="toggleChatWidget()" class="close-btn">&times;</button>
+        </div>
+        <div #chatBody class="chat-widget-body">
+            <!-- Messages will be rendered here -->
+            <div *ngFor="let msg of messages" class="chat-message"
+                [ngClass]="{'bot': msg.sender === 'bot', 'user': msg.sender === 'user'}">
+                {{ msg.text }}
+            </div>
+            <!-- Thinking Indicator -->
+            <div *ngIf="isThinking" class="thinking">
+                <span>.</span><span>.</span><span>.</span>
+            </div>
+        </div>
+        <div class="chat-widget-footer">
+            <input type="text" placeholder="Ask anything..." [(ngModel)]="userInput"
+                (keyup.enter)="handleSendMessage()">
+            <button (click)="handleSendMessage()"><i class="bi bi-send-fill"></i></button>
+        </div>
+    </div>
+
+    <!-- Chat Toggle Button -->
+    <div (click)="toggleChatWidget()" class="chat-toggle-button">
+        <i class="bi bi-chat-dots-fill"></i>
+    </div>
+</div>

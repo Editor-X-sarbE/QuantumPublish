@@ -1,0 +1,113 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3 shadow-sm">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold text-uppercase" href="home">Q Publish</a>
+
+        <!-- Toggle for mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Nav Links -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+
+                <!-- Browse Articles Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="browseDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Browse Articles
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="browseDropdown">
+                        <li><a class="dropdown-item" href="/">Old Articles</a></li>
+                        <li><a class="dropdown-item" routerLink="/browse/new">New Articles</a></li>
+                    </ul>
+                </li>
+
+                <!-- Editor Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="editorDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Editor
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="editorDropdown">
+                        <li><a class="dropdown-item" routerLink="/editor/dashboard">Dashboard</a></li>
+                        <li><a class="dropdown-item" routerLink="/editor/submissions">All Submissions</a></li>
+                        <li><a class="dropdown-item" routerLink="/editor/reviewers">Assign Reviewers</a></li>
+                        <li><a class="dropdown-item" routerLink="/editor/decisions">Decisions</a></li>
+                        <li><a class="dropdown-item" routerLink="/editor/issues">Manage Issues</a></li>
+                    </ul>
+                </li>
+
+                <!-- Reviewer Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="reviewerDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Reviewer
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="reviewerDropdown">
+                        <li><a class="dropdown-item" routerLink="/reviewer/dashboard">Dashboard</a></li>
+                        <li><a class="dropdown-item" routerLink="/reviewer/assigned">Assigned Reviews</a></li>
+                        <li><a class="dropdown-item" routerLink="/reviewer/submit">Submit Review</a></li>
+                    </ul>
+                </li>
+
+                <!-- Author Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="authorDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Author
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="authorDropdown">
+                        <li><a class="dropdown-item" routerLink="/author/dashboard">Dashboard</a></li>
+                        <li><a class="dropdown-item" routerLink="/author/mysubmissions">My Submissions</a></li>
+                        <li><a class="dropdown-item" routerLink="/author/submit">Submit New Article</a></li>
+                        <li><a class="dropdown-item" routerLink="/author/notifications">Notifications</a></li>
+                    </ul>
+                </li>
+
+                <!-- Admin Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Admin
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <li><a class="dropdown-item" routerLink="/admin/panel">Admin Panel</a></li>
+                        <li><a class="dropdown-item" routerLink="/admin/users">Manage Users</a></li>
+                        <li><a class="dropdown-item" routerLink="/admin/categories">Manage Categories</a></li>
+                        <li><a class="dropdown-item" routerLink="/admin/issues">Manage Issues</a></li>
+                        <li><a class="dropdown-item" routerLink="/admin/settings">System Settings</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <!-- Search bar -->
+            <form class="d-flex me-3 search-bar">
+                <div class="search-wrapper">
+                    <input type="search" class="form-control" placeholder="Search articles..." aria-label="Search" />
+                    <i class="bi bi-search"></i>
+                </div>
+            </form>
+
+            <!-- Profile Dropdown -->
+            <div class="dropdown">
+                <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" id="profileMenu"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="assets/images/Logox.png" alt="Profile" class="rounded-circle profile-icon" />
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileMenu">
+                    <li><a class="dropdown-item" href="/login">Login</a></li>
+                    <li><a class="dropdown-item" href="/register">Register</a></li>
+                    <li><a class="dropdown-item" routerLink="/about">About</a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

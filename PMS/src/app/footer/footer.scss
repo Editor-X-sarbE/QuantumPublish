@@ -1,0 +1,96 @@
+.footer {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #e0e0e0;
+    font-size: 0.95rem;
+
+    .footer-logo {
+        font-weight: 700;
+        font-size: 1.8rem;
+
+        span {
+            color: #00d4ff;
+        }
+    }
+
+    .footer-desc {
+        font-size: 0.9rem;
+        color: #b0b0b0;
+        line-height: 1.6;
+    }
+
+    .footer-title {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #00d4ff;
+    }
+
+    .footer-links {
+        li {
+            margin-bottom: 0.6rem;
+
+            a {
+                color: #e0e0e0;
+                text-decoration: none;
+                transition: color 0.3s ease;
+
+                &:hover {
+                    color: #00d4ff;
+                    padding-left: 5px;
+                }
+            }
+        }
+    }
+
+    .social-icons {
+        a {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 1.3rem;
+            color: #e0e0e0;
+            transition: transform 0.3s ease, color 0.3s ease;
+
+            &:hover {
+                transform: translateY(-4px);
+                color: #00d4ff;
+            }
+        }
+    }
+
+    .newsletter-form {
+        input {
+            border-radius: 20px 0 0 20px;
+            border: none;
+            padding: 10px 15px;
+            outline: none;
+            background: #2b2b3c;
+            color: #fff;
+
+            &::placeholder {
+                color: #b0b0b0;
+            }
+        }
+
+        .btn-subscribe {
+            background: #00d4ff;
+            color: #16213e;
+            border-radius: 0 20px 20px 0;
+            padding: 10px 15px;
+            font-weight: 600;
+            transition: 0.3s;
+
+            &:hover {
+                background: #009ec3;
+                color: #fff;
+            }
+        }
+    }
+
+    .footer-divider {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-highlight {
+        color: #00d4ff;
+        font-weight: 600;
+    }
+}

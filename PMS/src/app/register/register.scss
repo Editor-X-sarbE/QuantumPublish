@@ -1,0 +1,92 @@
+.register-page {
+    height: 100vh;
+    background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.8s ease-in-out;
+
+    .form-label {
+        font-weight: 500;
+        color: #487ba5;
+    }
+
+    .auth-card {
+        max-width: 430px; // compact width
+        width: 100%;
+        border-radius: 12px;
+        background: #fff;
+        animation: slideUp 0.6s ease;
+
+        .card-body {
+            padding: 1.5rem !important; // reduced padding
+        }
+
+        .logo {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+
+        input {
+            border-radius: 8px;
+            font-size: 0.9rem;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            transition: 0.3s;
+
+            &:focus {
+                border-color: #6a82fb;
+                box-shadow: 0 0 6px rgba(106, 130, 251, 0.4);
+            }
+        }
+
+        .btn-gradient {
+            background: linear-gradient(90deg, #6a82fb, #9face6);
+            border: none;
+            color: rgb(102, 101, 168);
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 8px;
+            transition: transform 0.2s ease, background 0.3s;
+
+            &:hover {
+                transform: scale(1.04);
+                background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            }
+        }
+
+        p {
+            font-size: 0.85rem;
+        }
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
