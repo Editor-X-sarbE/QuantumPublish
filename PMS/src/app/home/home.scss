@@ -143,10 +143,11 @@
         gap: 20px;
 
         .card {
-            background-color: #f5f5f5;
+            background-color: #dadada;
             padding: 25px 20px;
             border-radius: 8px;
-            width: 250px;
+            width: 270px;
+            // height: 140px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: 0.3s;
 
@@ -172,20 +173,18 @@
 .about {
     padding: 60px 20px;
     background: #d8d8d8b9;
-    // background: #d1d7da79;
 
     .about-content {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
-        justify-content: center;
         gap: 40px;
         max-width: 1100px;
         margin: auto;
     }
 
     .about-text {
-        flex: 1;
+        /* Takes up ~40% of the horizontal space */
+        flex: 1 1 40%;
 
         h2 {
             font-size: 2rem;
@@ -216,14 +215,14 @@
     }
 
     .about-image {
-        flex: 1;
-        text-align: center;
+        /* Takes up ~60% of the horizontal space */
+        flex: 1 1 70%;
+        text-align: right;
 
-        img {
-            max-width: 100%;
-            border-radius: 10px;
-            // box-shadow: 0 4px 12px #a718181a;
-            box-shadow: 0 4px 12px #0000001a;
+        dotlottie-wc {
+            width: 100%;
+            max-width: 800px;
+            display: inline-block;
         }
     }
 }
