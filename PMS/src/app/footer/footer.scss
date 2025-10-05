@@ -1,7 +1,20 @@
 .footer {
+    // Keep the gradient here as the base background color for the entire footer area
     background: linear-gradient(135deg, #1a1a2e, #16213e);
     color: #e0e0e0;
     font-size: 0.95rem;
+    position: relative;
+    /* CRITICAL: This makes absolute positioning of the illustration work */
+    overflow: hidden;
+    /* Ensures the illustration doesn't spill out if it's larger */
+    padding-bottom: 120px;
+    /* Adjust this to make space for the illustration at the bottom */
+    height: 600px;
+
+    .container {
+        position: relative; // Ensure content is positioned relative to the footer
+        z-index: 10; // CRITICAL: Ensure content appears above the illustration
+    }
 
     .footer-logo {
         font-weight: 700;
@@ -92,5 +105,28 @@
     .brand-highlight {
         color: #00d4ff;
         font-weight: 600;
+    }
+
+    // NEW: Styling for the footer illustration
+    .footer-illustration {
+        position: absolute;
+        /* Position relative to the .footer parent */
+        bottom: 0;
+        /* Stick to the bottom */
+        left: 0;
+        width: 100%;
+        /* Span full width */
+        height: auto;
+        /* Maintain aspect ratio */
+        z-index: 5;
+        /* Position below content but above main footer background if needed */
+        line-height: 0;
+        /* Remove any extra line-height space from img */
+
+        img {
+            width: 100%;
+            height: auto;
+            display: block; // Remove extra space below image
+        }
     }
 }

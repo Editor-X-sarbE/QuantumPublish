@@ -5,45 +5,6 @@
     min-height: 100vh;
 }
 
-/* Hero Section */
-// .hero {
-//     background: linear-gradient(to right, #4b79a1, #283e51);
-//     color: #fff;
-//     text-align: center;
-//     padding: 100px 20px;
-
-//     .hero-content {
-//         max-width: 700px;
-//         margin: auto;
-
-//         h1 {
-//             font-size: 3rem;
-//             margin-bottom: 20px;
-//         }
-
-//         p {
-//             font-size: 1.2rem;
-//             margin-bottom: 30px;
-//         }
-
-//         .btn-primary {
-//             background-color: #ff6b6b;
-//             color: #fff;
-//             padding: 12px 30px;
-//             text-decoration: none;
-//             border-radius: 6px;
-//             font-weight: bold;
-//             transition: 0.3s;
-
-//             &:hover {
-//                 background-color: #ff4757;
-//             }
-//         }
-//     }
-// }
-/* ============================
-   Futuristic Hero Section
-============================ */
 .hero {
     position: relative;
     height: 100vh;
@@ -51,7 +12,7 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    width:auto;
+    width: auto;
 
     .overlay {
         position: absolute;
@@ -131,7 +92,8 @@
         }
     }
 }
-.g_future{
+
+.g_future {
     color: #cf1313;
     font-size: 2.2rem;
     font-weight: 700;
@@ -260,7 +222,8 @@
         img {
             max-width: 100%;
             border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            // box-shadow: 0 4px 12px #a718181a;
+            box-shadow: 0 4px 12px #0000001a;
         }
     }
 }
