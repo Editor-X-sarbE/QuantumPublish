@@ -1,1 +1,69 @@
-<p>submission works!</p>
+<div class="submission-wrapper">
+    <div class="submission-card">
+        <h1>📝 New Manuscript Submission</h1>
+        <p class="subtitle">Complete the form below to submit your article</p>
+
+        <form (submit)="handleSubmit($event)" class="submission-form">
+            <!-- Article Type -->
+            <div class="form-group">
+                <label for="articleType">Article Type</label>
+                <select id="articleType" [(ngModel)]="submissionData.articleType" name="articleType" required>
+                    <option value="">Select Type</option>
+                    <option value="original-research">Original Research</option>
+                    <option value="review-article">Review Article</option>
+                    <option value="case-study">Case Study</option>
+                    <option value="letter-to-editor">Letter to the Editor</option>
+                </select>
+            </div>
+
+            <!-- Manuscript Title -->
+            <div class="form-group">
+                <label for="title">Manuscript Title</label>
+                <input type="text" id="title" [(ngModel)]="submissionData.title" name="title"
+                    placeholder="Enter full manuscript title" required />
+            </div>
+
+            <!-- Abstract -->
+            <div class="form-group">
+                <label for="abstract">Abstract</label>
+                <textarea id="abstract" [(ngModel)]="submissionData.abstract" name="abstract"
+                    placeholder="Paste your abstract here" required></textarea>
+            </div>
+
+            <!-- Keywords -->
+            <div class="form-group">
+                <label for="keywords">Keywords</label>
+                <input type="text" id="keywords" [(ngModel)]="submissionData.keywords" name="keywords"
+                    placeholder="Ex: AI, publishing, research (comma-separated)" />
+            </div>
+
+            <!-- Drag & Drop Upload -->
+            <div class="upload-section">
+                <label class="upload-label">Upload Files</label>
+
+                <div class="drag-drop-zone" [class.dragging]="isDragging" (dragover)="onDragOver($event)"
+                    (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+                    <p class="upload-icon">📁</p>
+                    <p class="upload-text">
+                        Drag & drop your manuscript here or
+                        <label for="fileInput" class="browse-link">browse files</label>
+                    </p>
+                    <input id="fileInput" type="file" multiple (change)="onFileSelected($event)" hidden />
+                    <small>Upload main manuscript and supplementary materials (optional)</small>
+                </div>
+
+                <!-- ✅ Updated File List Section -->
+                <ul *ngIf="submissionData.files.length > 0" class="file-list">
+                    <li *ngFor="let file of submissionData.files; let i = index">
+                        {{ file.name }} — {{ getFileSize(file.size) }}
+                        <button type="button" class="remove-btn" (click)="removeFile(i)">
+                            ✖
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Manuscript</button>
+        </form>
+    </div>
+</div>

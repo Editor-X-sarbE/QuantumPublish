@@ -1,0 +1,100 @@
+/* 🌿 Full Page Background */
+body,
+:host {
+    background: linear-gradient(135deg, #4b79a1, #283e51);
+    min-height: 50vh;
+    display: flex; // enables horizontal layout
+    flex-wrap: wrap; // allows wrapping on smaller screens
+    padding-bottom: 50px;
+    padding-top: 30px;
+    justify-content: center; // center horizontally
+    align-items: flex-start; // align containers at top
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    gap: 30px; // space between dashboard containers
+}
+
+/* 🧭 Main Dashboard Card */
+.dashboard-container {
+    width: 100%;
+    max-width: 1280px;
+    background: #b8bebc;
+    border-radius: 20px;
+    padding: 50px 40px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* 🏷️ Header Area */
+h1 {
+    font-size: 2.3rem;
+    color: #144a5a;
+    /* rich dark green */
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #1e6484;
+    /* lighter green for subtitle */
+    margin-bottom: 40px;
+    font-weight: 500;
+}
+
+/* 🧩 Dashboard Buttons Grid */
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    justify-items: center;
+}
+
+/* 🔘 Dashboard Buttons */
+button {
+    background: linear-gradient(135deg, #279eae, #1e6c84);
+    color: #ffffff;
+    padding: 16px 25px;
+    font-size: 1.05rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(30, 132, 64, 0.5);
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 250px;
+}
+
+/* 🪄 Hover & Click Effects */
+button:hover {
+    background: linear-gradient(135deg, #1e8449, #145a32);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(20, 90, 50, 0.6);
+}
+
+button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(20, 90, 50, 0.4);
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 35px 25px;
+    }
+
+    h1 {
+        font-size: 1.9rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    button {
+        font-size: 0.95rem;
+        padding: 14px 18px;
+    }
+}

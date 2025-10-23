@@ -1,0 +1,179 @@
+/* 🌿 Background */
+.submission-wrapper {
+    background: linear-gradient(135deg, #4b79a1, #283e51);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+/* 🧾 Card */
+.submission-card {
+    background: #e7e7e786;
+    width: 90%;
+    max-width: 900px;
+    padding: 40px 50px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    text-align: left;
+}
+
+/* 🏷️ Headers */
+h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1b4332;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: #3b7a57;
+    font-size: 1rem;
+    margin-bottom: 30px;
+}
+
+/* 📄 Form Layout */
+.submission-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #1b4332;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #7bbd72;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.2s ease;
+    background: #e7e7e786;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #1e8449;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+}
+
+/* 📁 Drag & Drop Zone */
+.upload-section {
+    margin-top: 10px;
+}
+
+.upload-label {
+    font-weight: 600;
+    color: #145a32;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.drag-drop-zone {
+    border: 2px dashed #96d38c;
+    background: #e3e6e35d;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.drag-drop-zone.dragging {
+    border-color: #27ae60;
+    background: #ecfdf500;
+    transform: scale(1.02);
+}
+
+.upload-icon {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+}
+
+.upload-text {
+    font-size: 1rem;
+    color: #2d6a4f;
+}
+
+.browse-link {
+    color: #0b6e4f;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+small {
+    display: block;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* 📂 File List */
+.file-list {
+    margin-top: 10px;
+    padding-left: 20px;
+    list-style-type: disc;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+/* ❌ Remove Button for Each File */
+.remove-btn {
+    background: transparent;
+    border: none;
+    color: #e63946;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: color 0.2s;
+}
+
+.remove-btn:hover {
+    color: #b22222;
+}
+
+/* ✅ Submit Button */
+.submit-btn {
+    background: linear-gradient(135deg, #27ae60, #1e8449);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #1e8449, #145a32);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(20, 90, 50, 0.5);
+}
+
+/* 📱 Responsive */
+@media (max-width: 640px) {
+    .submission-card {
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
