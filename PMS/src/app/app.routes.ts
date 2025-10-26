@@ -28,4 +28,14 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./author/dashboard/dashboard').then((m) => m.Dashboard),
     },
+    {
+        path: 'revision-management',
+        loadComponent: () =>
+            import('./author/revision-management/revision-management').then((m) => m.RevisionManagement),
+    },
+    {
+        path: 'update-submission',
+        loadComponent: () =>
+            import('./author/update-submission/update-submission').then((m) => m.UpdateSubmission),
+    }
 ];

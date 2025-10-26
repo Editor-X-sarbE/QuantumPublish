@@ -1,28 +1,85 @@
-<!-- <div class="dashboard-container">
+<!-- 🌿 Author Dashboard -->
+<div class="dashboard-container" id="author-dashboard">
     <h1>Author Dashboard</h1>
     <p class="subtitle">Manage your publications easily</p>
 
     <div class="button-grid">
-        <button (click)="navigateTo('/revision-management')">📄 Revision Management</button>
-        <button (click)="navigateTo('/see-history')">📜 See History</button>
-        <button (click)="navigateTo('/status-tracking')">📊 Status Tracking</button>
-        <button (click)="navigateTo('/submission')">📝 New Submission</button>
-        <button (click)="navigateTo('/update-submission')">✏️ Update Submission</button>
-    </div>
-</div> -->
-<div class="dashboard-container">
-    <h1>Author Dashboard</h1>
-    <p class="subtitle">Manage your publications easily</p>
-
-    <div class="button-grid">
-        <button (click)="navigateTo('/revision-management')">📄 Revision Management</button>
-        <button (click)="navigateTo('/see-history')">📜 See History</button>
-        <button (click)="navigateTo('/status-tracking')">📊 Status Tracking</button>
-        <button (click)="navigateTo('/submission')">📝 New Submission</button>
-        <button (click)="navigateTo('/update-submission')">✏️ Update Submission</button>
+        <a href="/revision-management">📄 Revision Management</a>
+        <a>📜 See History</a>
+        <a>📊 Status Tracking</a>
+        <a href="/submission">📝 New Submission</a>
+        <a href="/update-submission">✏️ Update Submission</a>
     </div>
 </div>
-<!-- History of Submission -->
-<div class="dashboard-container">
-    <h1>History of Submission</h1>
+
+<!-- 🌟 Status Tracking Section -->
+<div class="dashboard-container" id="statuspage">
+    <h1>Status Tracking</h1>
+
+    <div class="status-tracking">
+        <div class="status-card submitted">
+            <h3>📝 Submitted</h3>
+            <p>Your manuscript has been received and is awaiting initial screening.</p>
+            <span class="status-date">Date: 20 Oct 2025</span>
+        </div>
+
+        <div class="status-card under-review">
+            <h3>🔍 Under Review</h3>
+            <p>Assigned to reviewers for evaluation and feedback.</p>
+            <span class="status-date">Date: 22 Oct 2025</span>
+        </div>
+
+        <div class="status-card revision">
+            <h3>✏️ Revision Required</h3>
+            <p>Reviewer comments received; please update and resubmit.</p>
+            <span class="status-date">Date: 23 Oct 2025</span>
+        </div>
+
+        <div class="status-card accepted">
+            <h3>✅ Accepted</h3>
+            <p>Congratulations! Your paper has been approved for publication.</p>
+            <span class="status-date">Date: 24 Oct 2025</span>
+        </div>
+    </div>
+</div>
+
+<!-- 🕰️ History of Submissions -->
+<div class="dashboard-container" id="history">
+    <h1>📜 History of Submissions</h1>
+    <p class="subtitle">View all submitted manuscripts by users</p>
+
+    <!-- 🚫 No history available -->
+    <div *ngIf="!submissionHistory || submissionHistory.length === 0" class="no-history">
+        <p>No submissions have been made yet.</p>
+    </div>
+
+    <!-- 📋 History Table -->
+    <div *ngIf="submissionHistory && submissionHistory.length > 0" class="history-table-wrapper">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>👤 Username</th>
+                    <th>📄 Article Title</th>
+                    <th>🧩 Article Type</th>
+                    <th>📅 Date Submitted</th>
+                    <th>📎 Files</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let record of submissionHistory">
+                    <td>{{ record?.username }}</td>
+                    <td>{{ record?.title }}</td>
+                    <td>{{ record?.articleType }}</td>
+                    <td>{{ record?.date | date:'mediumDate' }}</td>
+                    <td>
+                        <ul class="file-list-mini">
+                            <li *ngFor="let file of record?.files || []">
+                                <a [href]="file.url" target="_blank">{{ file.name }}</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

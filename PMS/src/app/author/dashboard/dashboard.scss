@@ -3,14 +3,16 @@ body,
 :host {
     background: linear-gradient(135deg, #4b79a1, #283e51);
     min-height: 50vh;
-    display: flex; // enables horizontal layout
-    flex-wrap: wrap; // allows wrapping on smaller screens
+    display: flex;
+    flex-wrap: wrap;
+    /* allows wrapping on smaller screens */
     padding-bottom: 50px;
     padding-top: 30px;
-    justify-content: center; // center horizontally
-    align-items: flex-start; // align containers at top
+    justify-content: center;
+    align-items: flex-start;
     font-family: 'Poppins', 'Segoe UI', sans-serif;
-    gap: 30px; // space between dashboard containers
+    gap: 30px;
+    /* space between dashboard containers */
 }
 
 /* 🧭 Main Dashboard Card */
@@ -29,7 +31,7 @@ body,
 h1 {
     font-size: 2.3rem;
     color: #144a5a;
-    /* rich dark green */
+    /* rich dark blue-green */
     font-weight: 700;
     margin-bottom: 10px;
 }
@@ -37,7 +39,7 @@ h1 {
 .subtitle {
     font-size: 1.1rem;
     color: #1e6484;
-    /* lighter green for subtitle */
+    /* lighter blue tone */
     margin-bottom: 40px;
     font-weight: 500;
 }
@@ -50,8 +52,10 @@ h1 {
     justify-items: center;
 }
 
-/* 🔘 Dashboard Buttons */
-button {
+/* 🌈 Button Grid Links (Anchor Buttons) */
+.button-grid a {
+    display: inline-block;
+    text-align: center;
     background: linear-gradient(135deg, #279eae, #1e6c84);
     color: #ffffff;
     padding: 16px 25px;
@@ -61,22 +65,29 @@ button {
     cursor: pointer;
     font-weight: 600;
     letter-spacing: 0.5px;
+    text-decoration: none;
+    /* remove underline */
     box-shadow: 0 4px 12px rgba(30, 132, 64, 0.5);
     transition: all 0.3s ease;
     width: 100%;
     max-width: 250px;
 }
 
-/* 🪄 Hover & Click Effects */
-button:hover {
+/* 🪄 Hover & Active Effects */
+.button-grid a:hover {
     background: linear-gradient(135deg, #1e8449, #145a32);
     transform: translateY(-4px);
     box-shadow: 0 6px 18px rgba(20, 90, 50, 0.6);
 }
 
-button:active {
+.button-grid a:active {
     transform: scale(0.98);
     box-shadow: 0 2px 8px rgba(20, 90, 50, 0.4);
+}
+
+/* 🧭 Smooth Scroll */
+html {
+    scroll-behavior: smooth;
 }
 
 /* 📱 Responsive Design */
@@ -93,8 +104,139 @@ button:active {
         font-size: 1rem;
     }
 
-    button {
+    .button-grid a {
         font-size: 0.95rem;
         padding: 14px 18px;
     }
+}
+
+/* 🌟 Status Tracking Section */
+.status-tracking {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+    padding: 0 10px;
+}
+
+.status-card {
+    background: #c9c4cc;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 25px 20px;
+    text-align: left;
+    transition: all 0.3s ease;
+    border-top: 5px solid transparent;
+
+    h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #1b4332;
+    }
+
+    p {
+        font-size: 0.95rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .status-date {
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+}
+
+/* 🎨 Color themes per status */
+.status-card.submitted {
+    border-top-color: #1e90ff;
+}
+
+.status-card.under-review {
+    border-top-color: #f1c40f;
+}
+
+.status-card.revision {
+    border-top-color: #e67e22;
+}
+
+.status-card.accepted {
+    border-top-color: #27ae60;
+}
+
+/* 🕰️ History of Submissions */
+.history-table-wrapper {
+    margin-top: 30px;
+    overflow-x: auto;
+    border-radius: 12px;
+    background: #e3e3e3;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    border-radius: 12px;
+    overflow: hidden;
+
+    th,
+    td {
+        padding: 14px 18px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    th {
+        background: #1e6c84;
+        color: #fff;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    td {
+        font-size: 0.95rem;
+        color: #333;
+        text-align: center;
+    }
+
+    tr:hover {
+        background: rgba(30, 132, 132, 0.1);
+    }
+}
+
+/* 📎 Mini File List inside Table */
+.file-list-mini {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+        margin-bottom: 4px;
+
+        a {
+            color: #1e6c84;
+            text-decoration: none;
+            font-weight: 500;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+/* 🚫 No History Message */
+.no-history {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 30px;
+    color: #333;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
