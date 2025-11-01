@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PublicationService } from '../../services/publication.service';
 
 @Component({
   selector: 'app-submission',
@@ -10,7 +11,6 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./submission.scss'],
 })
 export class SubmissionComponent {
-  // 🔹 Data model for form
   submissionData = {
     articleType: '',
     title: '',
@@ -22,7 +22,9 @@ export class SubmissionComponent {
   isDragging = false;
   isSubmitted = false;
 
-  /** 🔹 Triggered when files are selected from file dialog */
+  constructor(private publicationService: PublicationService) {} // ✅ proper injection
+
+  // 🔹 File selection
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files?.length) {
@@ -30,19 +32,16 @@ export class SubmissionComponent {
     }
   }
 
-  /** 🔹 Drag-over event handler */
   onDragOver(event: DragEvent): void {
     event.preventDefault();
     this.isDragging = true;
   }
 
-  /** 🔹 Drag-leave event handler */
   onDragLeave(event: DragEvent): void {
     event.preventDefault();
     this.isDragging = false;
   }
 
-  /** 🔹 Drop event handler */
   onDrop(event: DragEvent): void {
     event.preventDefault();
     this.isDragging = false;
@@ -51,19 +50,16 @@ export class SubmissionComponent {
     }
   }
 
-  /** 🔹 Add new files, avoiding duplicates */
   private addFiles(newFiles: File[]): void {
     const existingNames = new Set(this.submissionData.files.map(f => f.name));
     const uniqueFiles = newFiles.filter(file => !existingNames.has(file.name));
     this.submissionData.files.push(...uniqueFiles);
   }
 
-  /** 🔹 Remove a file from the list */
   removeFile(index: number): void {
     this.submissionData.files.splice(index, 1);
   }
 
-  /** 🔹 Validate required fields before submission */
   isFormValid(): boolean {
     return (
       this.submissionData.articleType.trim() !== '' &&
@@ -72,26 +68,43 @@ export class SubmissionComponent {
     );
   }
 
-  /** 🔹 Handle form submission */
+  // ✅ Updated to handle upload via PublicationService
   handleSubmit(event: Event): void {
-    event.preventDefault();
+  event.preventDefault();
 
-    if (!this.isFormValid()) {
-      alert('⚠️ Please fill out all required fields before submitting.');
-      return;
-    }
-
-    this.isSubmitted = true;
-    console.log('✅ Manuscript submitted successfully!');
-    console.log('Form Data:', this.submissionData);
-
-    setTimeout(() => {
-      alert('🎉 Your manuscript has been successfully submitted!');
-      this.resetForm();
-    }, 1200);
+  if (!this.isFormValid()) {
+    alert('⚠️ Please fill out all required fields before submitting.');
+    return;
   }
 
-  /** 🔹 Reset the form */
+  const formData = new FormData();
+  formData.append('articleType', this.submissionData.articleType);
+  formData.append('title', this.submissionData.title);
+  formData.append('abstractText', this.submissionData.abstract); // ✅ fixed key
+  formData.append('keywords', this.submissionData.keywords);
+
+  // ✅ backend expects "file" (singular), not "files"
+  if (this.submissionData.files.length > 0) {
+    formData.append('file', this.submissionData.files[0]);
+  } else {
+    alert('⚠️ Please attach at least one PDF file.');
+    return;
+  }
+
+  this.publicationService.uploadPublication(formData).subscribe({
+    next: (res: any) => {
+      console.log('✅ Upload successful:', res);
+      alert('🎉 Manuscript uploaded successfully!');
+      this.resetForm();
+    },
+    error: (err: any) => {
+      console.error('❌ Upload failed:', err);
+      alert('❌ Failed to upload. Please try again.');
+    },
+  });
+}
+
+
   resetForm(): void {
     this.submissionData = {
       articleType: '',
@@ -103,7 +116,6 @@ export class SubmissionComponent {
     this.isSubmitted = false;
   }
 
-  /** 🔹 Convert file size to readable format */
   getFileSize(size: number): string {
     if (size < 1024) return `${size} bytes`;
     else if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;

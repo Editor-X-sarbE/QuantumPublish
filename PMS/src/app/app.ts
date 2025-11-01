@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { Navbar } from './navbar/navbar';
 import { Footer } from './footer/footer';
 import { Chatbot } from './chatbot/chatbot'; // 1. IMPORT the chatbot component
+// import { HttpClientModule } from '@angular/common/http';  
 
 @Component({
   selector: 'app-root',
