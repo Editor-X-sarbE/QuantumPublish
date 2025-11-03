@@ -1,0 +1,309 @@
+<div class="assign-reviewers-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Assign Reviewers</h1>
+      <p class="page-subtitle">Match manuscripts with qualified reviewers</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="showReviewerPool()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-width="2"/>
+        </svg>
+        Reviewer Pool
+      </button>
+      <button class="btn-primary" (click)="autoAssign()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Auto-Assign
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M9 12h6M9 16h6M9 8h6M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-value">{{pendingAssignments}}</h3>
+        <p class="stat-label">Pending Assignments</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-value">{{assignedManuscripts}}</h3>
+        <p class="stat-label">Assigned</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-value">{{availableReviewers}}</h3>
+        <p class="stat-label">Available Reviewers</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-value">{{avgResponseTime}}</h3>
+        <p class="stat-label">Avg Response Time (days)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <div class="content-layout">
+    <!-- Left Panel - Manuscripts List -->
+    <div class="manuscripts-panel">
+      <div class="panel-header">
+        <h2>Manuscripts Awaiting Review</h2>
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8" stroke-width="2"/>
+            <path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" placeholder="Search manuscripts..." [(ngModel)]="manuscriptSearch" (input)="filterManuscripts()"/>
+        </div>
+      </div>
+
+      <div class="filter-chips">
+        <button class="chip" [class.active]="selectedFilter === 'all'" (click)="filterByStatus('all')">
+          All ({{manuscripts.length}})
+        </button>
+        <button class="chip" [class.active]="selectedFilter === 'urgent'" (click)="filterByStatus('urgent')">
+          🔴 Urgent
+        </button>
+        <button class="chip" [class.active]="selectedFilter === 'unassigned'" (click)="filterByStatus('unassigned')">
+          Unassigned
+        </button>
+      </div>
+
+      <div class="manuscripts-list">
+        <div class="manuscript-card" 
+             *ngFor="let manuscript of filteredManuscripts"
+             [class.selected]="selectedManuscript?.id === manuscript.id"
+             (click)="selectManuscript(manuscript)">
+          <div class="card-header">
+            <span class="manuscript-id">{{manuscript.manuscriptId}}</span>
+            <span class="priority-badge" [class]="manuscript.priority">{{manuscript.priority}}</span>
+          </div>
+          <h3 class="manuscript-title">{{manuscript.title}}</h3>
+          <div class="manuscript-meta">
+            <span class="category">{{manuscript.category}}</span>
+            <span class="date">{{manuscript.submittedDate}}</span>
+          </div>
+          <div class="assignment-status">
+            <div class="assigned-reviewers" *ngIf="manuscript.assignedReviewers.length > 0">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-width="2"/>
+              </svg>
+              {{manuscript.assignedReviewers.length}}/{{manuscript.requiredReviewers}} assigned
+            </div>
+            <div class="unassigned" *ngIf="manuscript.assignedReviewers.length === 0">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2"/>
+              </svg>
+              Not assigned
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="filteredManuscripts.length === 0">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9 12h6M9 16h6M9 8h6M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" stroke-width="2"/>
+          </svg>
+          <p>No manuscripts found</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Reviewer Selection -->
+    <div class="reviewers-panel" *ngIf="selectedManuscript">
+      <div class="panel-header">
+        <div class="selected-manuscript-info">
+          <h2>Select Reviewers</h2>
+          <p class="manuscript-subtitle">{{selectedManuscript.title}}</p>
+        </div>
+        <div class="reviewer-count">
+          <span class="count-badge">
+            {{selectedManuscript.assignedReviewers.length}}/{{selectedManuscript.requiredReviewers}}
+          </span>
+        </div>
+      </div>
+
+      <!-- Search and Filters -->
+      <div class="reviewer-filters">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8" stroke-width="2"/>
+            <path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" placeholder="Search reviewers by name or expertise..." [(ngModel)]="reviewerSearch" (input)="filterReviewers()"/>
+        </div>
+
+        <select class="filter-select" [(ngModel)]="expertiseFilter" (change)="filterReviewers()">
+          <option value="">All Expertise</option>
+          <option *ngFor="let expertise of expertiseAreas" [value]="expertise">{{expertise}}</option>
+        </select>
+
+        <select class="filter-select" [(ngModel)]="availabilityFilter" (change)="filterReviewers()">
+          <option value="all">All Availability</option>
+          <option value="available">Available</option>
+          <option value="limited">Limited</option>
+        </select>
+      </div>
+
+      <!-- Currently Assigned Reviewers -->
+      <div class="assigned-section" *ngIf="selectedManuscript.assignedReviewers.length > 0">
+        <h3>Currently Assigned</h3>
+        <div class="reviewer-list assigned">
+          <div class="reviewer-card assigned" *ngFor="let reviewerId of selectedManuscript.assignedReviewers">
+            <ng-container *ngIf="getReviewerById(reviewerId) as reviewer">
+              <div class="reviewer-avatar">
+                <img [src]="reviewer.avatar" [alt]="reviewer.name">
+                <span class="availability-dot" [class]="reviewer.availability"></span>
+              </div>
+              <div class="reviewer-info">
+                <h4 class="reviewer-name">{{reviewer.name}}</h4>
+                <p class="reviewer-title">{{reviewer.title}}</p>
+                <div class="reviewer-meta">
+                  <span class="expertise-tag">{{reviewer.expertise}}</span>
+                  <span class="stats">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/>
+                    </svg>
+                    {{reviewer.completedReviews}} reviews
+                  </span>
+                </div>
+              </div>
+              <button class="btn-remove" (click)="removeReviewer(reviewer.id)" title="Remove">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Reviewers -->
+      <div class="available-section">
+        <h3>Available Reviewers ({{filteredReviewers.length}})</h3>
+        <div class="reviewer-list">
+          <div class="reviewer-card" 
+               *ngFor="let reviewer of filteredReviewers"
+               [class.disabled]="isReviewerAssigned(reviewer.id)">
+            <div class="reviewer-avatar">
+              <img [src]="reviewer.avatar" [alt]="reviewer.name">
+              <span class="availability-dot" [class]="reviewer.availability"></span>
+            </div>
+            <div class="reviewer-info">
+              <h4 class="reviewer-name">{{reviewer.name}}</h4>
+              <p class="reviewer-title">{{reviewer.title}}</p>
+              <div class="reviewer-meta">
+                <span class="expertise-tag">{{reviewer.expertise}}</span>
+                <span class="stats">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/>
+                  </svg>
+                  {{reviewer.completedReviews}} reviews
+                </span>
+                <span class="stats">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/>
+                  </svg>
+                  ~{{reviewer.avgResponseDays}} days
+                </span>
+              </div>
+              <div class="match-score" *ngIf="reviewer.matchScore">
+                <div class="score-bar">
+                  <div class="score-fill" [style.width.%]="reviewer.matchScore"></div>
+                </div>
+                <span class="score-label">{{reviewer.matchScore}}% match</span>
+              </div>
+            </div>
+            <button class="btn-assign" 
+                    (click)="assignReviewer(reviewer.id)"
+                    [disabled]="isReviewerAssigned(reviewer.id) || !canAssignMore()">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              {{isReviewerAssigned(reviewer.id) ? 'Assigned' : 'Assign'}}
+            </button>
+          </div>
+
+          <div class="empty-state" *ngIf="filteredReviewers.length === 0">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-width="2"/>
+            </svg>
+            <p>No reviewers match your criteria</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="panel-actions">
+        <button class="btn-secondary" (click)="cancelAssignment()">Cancel</button>
+        <button class="btn-primary" 
+                (click)="saveAssignments()"
+                [disabled]="selectedManuscript.assignedReviewers.length === 0">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Save & Notify Reviewers
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State for No Selection -->
+    <div class="no-selection-state" *ngIf="!selectedManuscript">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-width="2"/>
+      </svg>
+      <h3>Select a manuscript</h3>
+      <p>Choose a manuscript from the left panel to assign reviewers</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{modalTitle}}</h2>
+      <button class="btn-close" (click)="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p style="white-space: pre-line;">{{modalContent}}</p>
+    </div>
+    <div class="modal-actions" *ngIf="showModalActions">
+      <button class="btn-secondary" (click)="closeModal()">Cancel</button>
+      <button class="btn-primary" (click)="confirmAction()">Confirm</button>
+    </div>
+  </div>
+</div>

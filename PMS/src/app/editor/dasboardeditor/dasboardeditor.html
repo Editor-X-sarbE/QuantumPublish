@@ -1,0 +1,256 @@
+<div class="dashboard-editor-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="welcome-section">
+      <h1>Welcome back, <span class="user-name">{{ editorName }}</span>!</h1>
+      <p class="date-info">{{ currentDate | date: 'EEEE, MMMM d, yyyy' }}</p>
+    </div>
+    <div class="quick-actions">
+      <button class="btn btn-action" (click)="navigateToSubmissions()">
+        <span class="icon">📝</span>
+        View Submissions
+      </button>
+      <button class="btn btn-action btn-primary" (click)="assignReviewer()">
+        <span class="icon">👥</span>
+        Assign Reviewer
+      </button>
+    </div>
+  </div>
+
+  <!-- Statistics Overview -->
+  <div class="stats-grid">
+    <div class="stat-card" data-type="pending">
+      <div class="stat-header">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-trend positive" *ngIf="stats.pending.trend > 0">
+          ↗ {{ stats.pending.trend }}%
+        </div>
+      </div>
+      <div class="stat-value">{{ stats.pending.count }}</div>
+      <div class="stat-label">Pending Reviews</div>
+      <div class="stat-footer">
+        <span class="footer-text">Requires attention</span>
+      </div>
+    </div>
+
+    <div class="stat-card" data-type="review">
+      <div class="stat-header">
+        <div class="stat-icon">👁️</div>
+        <div class="stat-trend" [class.positive]="stats.underReview.trend > 0" [class.negative]="stats.underReview.trend < 0">
+          {{ stats.underReview.trend > 0 ? '↗' : '↘' }} {{ Math.abs(stats.underReview.trend) }}%
+        </div>
+      </div>
+      <div class="stat-value">{{ stats.underReview.count }}</div>
+      <div class="stat-label">Under Review</div>
+      <div class="stat-footer">
+        <span class="footer-text">In progress</span>
+      </div>
+    </div>
+
+    <div class="stat-card" data-type="accepted">
+      <div class="stat-header">
+        <div class="stat-icon">✅</div>
+        <div class="stat-trend positive">
+          ↗ {{ stats.accepted.trend }}%
+        </div>
+      </div>
+      <div class="stat-value">{{ stats.accepted.count }}</div>
+      <div class="stat-label">Accepted Articles</div>
+      <div class="stat-footer">
+        <span class="footer-text">This month</span>
+      </div>
+    </div>
+
+    <div class="stat-card" data-type="revision">
+      <div class="stat-header">
+        <div class="stat-icon">🔄</div>
+        <div class="stat-trend neutral">
+          {{ stats.revision.count > 0 ? '→' : '—' }}
+        </div>
+      </div>
+      <div class="stat-value">{{ stats.revision.count }}</div>
+      <div class="stat-label">Needs Revision</div>
+      <div class="stat-footer">
+        <span class="footer-text">Awaiting authors</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid">
+    <!-- Recent Submissions -->
+    <div class="content-card recent-submissions">
+      <div class="card-header">
+        <h2>Recent Submissions</h2>
+        <button class="btn-text" (click)="viewAllSubmissions()">View All →</button>
+      </div>
+      <div class="card-body">
+        <div class="submission-list">
+          <div class="submission-item" *ngFor="let submission of recentSubmissions" (click)="viewSubmission(submission)">
+            <div class="submission-icon" [attr.data-priority]="submission.priority">
+              {{ submission.priority === 'high' ? '🔴' : submission.priority === 'medium' ? '🟡' : '🟢' }}
+            </div>
+            <div class="submission-content">
+              <h4 class="submission-title">{{ submission.title }}</h4>
+              <div class="submission-meta">
+                <span class="author">{{ submission.author }}</span>
+                <span class="separator">•</span>
+                <span class="date">{{ submission.submittedDate | date: 'MMM d' }}</span>
+                <span class="separator">•</span>
+                <span class="category" [attr.data-category]="submission.category">{{ submission.category }}</span>
+              </div>
+            </div>
+            <div class="submission-status" [attr.data-status]="submission.status">
+              {{ getStatusLabel(submission.status) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="recentSubmissions.length === 0">
+          <div class="empty-icon">📭</div>
+          <p>No recent submissions</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Actions -->
+    <div class="content-card pending-actions">
+      <div class="card-header">
+        <h2>Pending Actions</h2>
+        <span class="badge-count">{{ pendingActions.length }}</span>
+      </div>
+      <div class="card-body">
+        <div class="action-list">
+          <div class="action-item" *ngFor="let action of pendingActions">
+            <div class="action-priority" [attr.data-priority]="action.priority">
+              {{ action.priority === 'urgent' ? '⚠️' : '📌' }}
+            </div>
+            <div class="action-content">
+              <div class="action-title">{{ action.title }}</div>
+              <div class="action-description">{{ action.description }}</div>
+              <div class="action-time">{{ action.dueDate | date: 'short' }}</div>
+            </div>
+            <button class="btn btn-small" (click)="completeAction(action)">Complete</button>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="pendingActions.length === 0">
+          <div class="empty-icon">✨</div>
+          <p>All caught up!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review Progress Chart -->
+    <div class="content-card review-chart">
+      <div class="card-header">
+        <h2>Review Progress</h2>
+        <select [(ngModel)]="chartPeriod" (change)="updateChart()" class="period-select">
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="quarter">This Quarter</option>
+        </select>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <div class="chart-bar" *ngFor="let bar of chartData">
+            <div class="bar-label">{{ bar.label }}</div>
+            <div class="bar-wrapper">
+              <div class="bar-fill" [style.height.%]="bar.percentage" [attr.data-type]="bar.type">
+                <span class="bar-value">{{ bar.value }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviewer Performance -->
+    <div class="content-card reviewer-performance">
+      <div class="card-header">
+        <h2>Top Reviewers</h2>
+        <button class="btn-text" (click)="viewAllReviewers()">View All →</button>
+      </div>
+      <div class="card-body">
+        <div class="reviewer-list">
+          <div class="reviewer-item" *ngFor="let reviewer of topReviewers; let i = index">
+            <div class="reviewer-rank">{{ i + 1 }}</div>
+            <div class="reviewer-avatar" [style.background-color]="reviewer.avatarColor">
+              {{ reviewer.name.charAt(0) }}
+            </div>
+            <div class="reviewer-info">
+              <div class="reviewer-name">{{ reviewer.name }}</div>
+              <div class="reviewer-stats">
+                {{ reviewer.reviewsCompleted }} reviews • {{ reviewer.avgTime }} days avg
+              </div>
+            </div>
+            <div class="reviewer-rating">
+              <span class="star">⭐</span>
+              <span class="rating-value">{{ reviewer.rating }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Deadlines -->
+    <div class="content-card upcoming-deadlines">
+      <div class="card-header">
+        <h2>Upcoming Deadlines</h2>
+      </div>
+      <div class="card-body">
+        <div class="deadline-list">
+          <div class="deadline-item" *ngFor="let deadline of upcomingDeadlines">
+            <div class="deadline-date">
+              <div class="date-day">{{ deadline.date | date: 'd' }}</div>
+              <div class="date-month">{{ deadline.date | date: 'MMM' }}</div>
+            </div>
+            <div class="deadline-content">
+              <div class="deadline-title">{{ deadline.title }}</div>
+              <div class="deadline-description">{{ deadline.description }}</div>
+            </div>
+            <div class="deadline-badge" [attr.data-urgency]="deadline.urgency">
+              {{ deadline.urgency }}
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="upcomingDeadlines.length === 0">
+          <div class="empty-icon">📅</div>
+          <p>No upcoming deadlines</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="content-card quick-stats">
+      <div class="card-header">
+        <h2>Quick Statistics</h2>
+      </div>
+      <div class="card-body">
+        <div class="quick-stat-grid">
+          <div class="quick-stat-item">
+            <div class="quick-stat-icon">📊</div>
+            <div class="quick-stat-value">{{ quickStats.avgReviewTime }}</div>
+            <div class="quick-stat-label">Avg Review Time (days)</div>
+          </div>
+          <div class="quick-stat-item">
+            <div class="quick-stat-icon">📈</div>
+            <div class="quick-stat-value">{{ quickStats.acceptanceRate }}%</div>
+            <div class="quick-stat-label">Acceptance Rate</div>
+          </div>
+          <div class="quick-stat-item">
+            <div class="quick-stat-icon">👥</div>
+            <div class="quick-stat-value">{{ quickStats.activeReviewers }}</div>
+            <div class="quick-stat-label">Active Reviewers</div>
+          </div>
+          <div class="quick-stat-item">
+            <div class="quick-stat-icon">📝</div>
+            <div class="quick-stat-value">{{ quickStats.totalSubmissions }}</div>
+            <div class="quick-stat-label">Total Submissions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

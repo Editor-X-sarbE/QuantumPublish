@@ -1,0 +1,128 @@
+<div class="decisions-container">
+  <div class="decisions-header">
+    <h1>Editorial Decisions</h1>
+    <p class="subtitle">Review and manage publication decisions for submitted articles</p>
+  </div>
+
+  <div class="filter-section">
+    <div class="search-box">
+      <input type="text" placeholder="Search by article title or author..." [(ngModel)]="searchTerm" (input)="filterDecisions()">
+      <span class="search-icon">🔍</span>
+    </div>
+    
+    <div class="filter-controls">
+      <select [(ngModel)]="selectedStatus" (change)="filterDecisions()" class="filter-select">
+        <option value="">All Statuses</option>
+        <option value="pending">Pending Decision</option>
+        <option value="accepted">Accepted</option>
+        <option value="rejected">Rejected</option>
+        <option value="revision">Revision Required</option>
+      </select>
+      
+      <select [(ngModel)]="selectedCategory" (change)="filterDecisions()" class="filter-select">
+        <option value="">All Categories</option>
+        <option value="quantum">Quantum Physics</option>
+        <option value="ai">Artificial Intelligence</option>
+        <option value="biotech">Biotechnology</option>
+        <option value="space">Space Science</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="stats-cards">
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.pending }}</div>
+      <div class="stat-label">Pending Decisions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.accepted }}</div>
+      <div class="stat-label">Accepted</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.rejected }}</div>
+      <div class="stat-label">Rejected</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.revision }}</div>
+      <div class="stat-label">Revisions Needed</div>
+    </div>
+  </div>
+
+  <div class="decisions-table-wrapper">
+    <table class="decisions-table">
+      <thead>
+        <tr>
+          <th>Article ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Submission Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let decision of filteredDecisions" [class.highlighted]="decision.urgent">
+          <td><span class="article-id">{{ decision.id }}</span></td>
+          <td class="title-cell">
+            <div class="article-title">{{ decision.title }}</div>
+          </td>
+          <td>{{ decision.author }}</td>
+          <td><span class="category-badge" [attr.data-category]="decision.category">{{ decision.category }}</span></td>
+          <td>{{ decision.submissionDate | date: 'MMM d, yyyy' }}</td>
+          <td>
+            <span class="status-badge" [attr.data-status]="decision.status">
+              {{ getStatusLabel(decision.status) }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button class="btn btn-primary" (click)="viewDetails(decision)">Review</button>
+            <button class="btn btn-secondary" (click)="makeDecision(decision)">Decide</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="filteredDecisions.length === 0" class="no-results">
+      <div class="no-results-icon">📋</div>
+      <p>No decisions found matching your criteria</p>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="filteredDecisions.length > 0">
+    <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+    <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+    <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+  </div>
+</div>
+
+<!-- Decision Modal -->
+<div class="modal-overlay" *ngIf="showDecisionModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Make Editorial Decision</h2>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body" *ngIf="selectedDecision">
+      <h3>{{ selectedDecision.title }}</h3>
+      <p class="modal-author">by {{ selectedDecision.author }}</p>
+      
+      <div class="decision-form">
+        <label>Decision</label>
+        <select [(ngModel)]="decisionType" class="decision-select">
+          <option value="accepted">Accept for Publication</option>
+          <option value="revision">Request Revision</option>
+          <option value="rejected">Reject</option>
+        </select>
+        
+        <label>Comments</label>
+        <textarea [(ngModel)]="decisionComments" placeholder="Enter your decision comments and feedback..." rows="6"></textarea>
+        
+        <div class="modal-actions">
+          <button class="btn btn-cancel" (click)="closeModal()">Cancel</button>
+          <button class="btn btn-submit" (click)="submitDecision()">Submit Decision</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,92 @@
-# Ignore node modules
-PMS/node_modules/
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files
 
-# Ignore package-lock.json
-/package-lock.json
+# -------------------------------------------------------
+# 🧱 Compiled output & build artifacts
+# -------------------------------------------------------
+/dist
+/build
+/tmp
+/out-tsc
+/bazel-out
+/.angular/cache
+/.angular/**
+/.angular/*
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+.sass-cache/
+.connect.lock
+
+# -------------------------------------------------------
+# 📦 Node dependencies and package managers
+# -------------------------------------------------------
+/node_modules
+PMS/node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# -------------------------------------------------------
+# 🧑‍💻 IDEs and editors
+# -------------------------------------------------------
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# -------------------------------------------------------
+# 💻 Visual Studio Code
+# -------------------------------------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# -------------------------------------------------------
+# 🗃️ Environment and configuration files
+# -------------------------------------------------------
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.env.*
+
+# -------------------------------------------------------
+# 🧪 Temporary or log files
+# -------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# -------------------------------------------------------
+# 🧰 System files (Windows/macOS/Linux)
+# -------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# -------------------------------------------------------
+# 🚀 Miscellaneous
+# -------------------------------------------------------
+# Ignore output from testing tools or build cache
+/.eslintcache
+/.parcel-cache
+/.next
+/.nuxt
+/.cache
+
+
