@@ -1,0 +1,81 @@
+<div class="articles-container">
+  <header class="articles-header">
+    <h1>Articles Archive</h1>
+    <p class="subtitle">Explore our collection of insightful articles</p>
+  </header>
+
+  <div class="filter-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        placeholder="Search articles..." 
+        class="search-input"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()">
+      <span class="search-icon">🔍</span>
+    </div>
+    <div class="filter-buttons">
+      <button 
+        *ngFor="let category of categories"
+        class="filter-btn"
+        [class.active]="isCategoryActive(category)"
+        (click)="onCategoryChange(category)">
+        {{ category }}
+      </button>
+    </div>
+  </div>
+
+  <div class="articles-grid">
+    <article 
+      *ngFor="let article of displayedArticles"
+      class="article-card"
+      (click)="onArticleClick(article)">
+      <div class="article-image">
+        <img [src]="article.imageUrl" [alt]="article.title">
+        <span class="article-category">{{ article.category }}</span>
+      </div>
+      <div class="article-content">
+        <h2 class="article-title">{{ article.title }}</h2>
+        <p class="article-excerpt">{{ article.excerpt }}</p>
+        <div class="article-meta">
+          <span class="article-date">{{ article.date }}</span>
+          <span class="article-read-time">{{ article.readTime }}</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage === 1"
+      (click)="previousPage()">
+      Previous
+    </button>
+    <div class="page-numbers">
+      <ng-container *ngFor="let page of pageNumbers">
+        <button 
+          *ngIf="!isEllipsis(page)"
+          class="page-num"
+          [class.active]="isPageActive(page)"
+          (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <span *ngIf="isEllipsis(page)" class="page-dots">...</span>
+      </ng-container>
+    </div>
+    <button 
+      class="page-btn"
+      [disabled]="currentPage === totalPages"
+      (click)="nextPage()">
+      Next
+    </button>
+  </div>
+
+  <div class="no-results" *ngIf="displayedArticles.length === 0">
+    <p>No articles found matching your criteria.</p>
+    <button class="reset-btn" (click)="selectedCategory = 'All'; searchQuery = ''; applyFilters()">
+      Reset Filters
+    </button>
+  </div>
+</div>

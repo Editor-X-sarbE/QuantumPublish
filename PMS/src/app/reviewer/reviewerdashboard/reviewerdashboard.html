@@ -1,0 +1,419 @@
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1 class="page-title">Reviewer Dashboard</h1>
+      <p class="page-subtitle">Manage and review assigned research papers</p>
+    <div class="header-actions">
+      <div class="search-box">
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search papers, authors..." 
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()"
+        />
+        <i class="bi bi-search"></i>
+      <button class="btn-filter" (click)="showFilterModal()">
+        <i class="bi bi-funnel"></i>
+        Filter
+      </button>
+      <button class="btn-sort" (click)="showSortModal()">
+        <i class="bi bi-sort-down"></i>
+        Sort By
+      </button>
+      <button class="btn-refresh" (click)="refreshData()">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card pending" (click)="filterByStatus('pending')">
+      <div class="stat-icon">
+        <i class="bi bi-clock-history"></i>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.pending }}</h3>
+        <p class="stat-label">Pending Reviews</p>
+      </div>
+    </div>
+    
+    <div class="stat-card completed" (click)="filterByStatus('completed')">
+      <div class="stat-icon">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.completed }}</h3>
+        <p class="stat-label">Completed</p>
+      </div>
+    </div>
+    
+    <div class="stat-card urgent">
+      <div class="stat-icon">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.dueSoon }}</h3>
+        <p class="stat-label">Due Soon</p>
+      </div>
+    </div>
+    
+    <div class="stat-card total" (click)="filterByStatus('all')">
+      <div class="stat-icon">
+        <i class="bi bi-file-earmark-text"></i>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.total }}</h3>
+        <p class="stat-label">Total Assigned</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assigned Reviews Section -->
+  <div class="reviews-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        Assigned Reviews
+        <span class="count-badge" *ngIf="filteredReviews.length > 0">{{ filteredReviews.length }}</span>
+      </h2>
+      <div class="view-toggle">
+        <button 
+          class="toggle-btn" 
+          [class.active]="viewMode === 'list'"
+          (click)="toggleViewMode('list')"
+        >
+          <i class="bi bi-list-ul"></i>
+        </button>
+        <button 
+          class="toggle-btn" 
+          [class.active]="viewMode === 'grid'"
+          (click)="toggleViewMode('grid')"
+        >
+          <i class="bi bi-grid-3x3-gap"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Loading reviews...</p>
+    </div>
+
+    <!-- Review Cards -->
+    <div class="reviews-list" [class.grid-view]="viewMode === 'grid'" *ngIf="!isLoading && !showEmptyState">
+      <div 
+        class="review-card" 
+        *ngFor="let review of filteredReviews; trackBy: trackByReviewId"
+        [class.completed-card]="review.status === 'completed'"
+      >
+        <div class="card-header">
+          <div class="paper-info">
+            <span class="paper-id">{{ review.paperId }}</span>
+            <span [ngClass]="getStatusBadgeClass(review.status)">
+              {{ review.status === 'in-progress' ? 'In Progress' : 
+                 review.status === 'pending' ? 'Pending Review' : 'Completed' }}
+            </span>
+          </div>
+          <div [ngClass]="'deadline ' + getDeadlineClass(review)">
+            <i class="bi" [ngClass]="review.status === 'completed' ? 'bi-check-circle' : 'bi-calendar-event'"></i>
+            {{ review.status === 'completed' ? 'Submitted: ' + formatDate(review.submittedDate!) : 'Due: ' + formatDate(review.deadline) }}
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <h3 class="paper-title">{{ review.title }}</h3>
+          <p class="paper-abstract">{{ review.abstract }}</p>
+          
+          <div class="paper-meta">
+            <div class="meta-item">
+              <i class="bi bi-person"></i>
+              <span>{{ review.author }}</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-tags"></i>
+              <span>{{ getTagsString(review.tags) }}</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-file-earmark"></i>
+              <span>{{ review.pages }} pages</span>
+            </div>
+          </div>
+
+          <!-- Progress Section for In-Progress Reviews -->
+          <div class="progress-section" *ngIf="review.status === 'in-progress' && review.progress">
+            <div class="progress-label">
+              <span>Review Progress</span>
+              <span class="progress-percent">{{ review.progress }}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="review.progress"></div>
+            </div>
+          </div>
+
+          <!-- Review Summary for Completed Reviews -->
+          <div class="review-summary" *ngIf="review.status === 'completed'">
+            <div class="summary-item">
+              <span class="summary-label">Your Rating:</span>
+              <span class="summary-value">{{ review.rating }}/10</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Recommendation:</span>
+              <span class="summary-value accepted">{{ review.recommendation }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <button class="btn-secondary" (click)="viewDetails(review)">
+            <i class="bi bi-eye"></i>
+            View Details
+          </button>
+          <button 
+            class="btn-primary" 
+            *ngIf="review.status === 'pending'"
+            (click)="startReview(review)"
+          >
+            <i class="bi bi-pencil-square"></i>
+            Start Review
+          </button>
+          <button 
+            class="btn-primary" 
+            *ngIf="review.status === 'in-progress'"
+            (click)="startReview(review)"
+          >
+            <i class="bi bi-pencil-square"></i>
+            Continue Review
+          </button>
+          <button 
+            class="btn-secondary" 
+            *ngIf="review.status === 'completed'"
+            (click)="viewCompletedReview(review)"
+          >
+            <i class="bi bi-eye"></i>
+            View Review
+          </button>
+          <button 
+            class="btn-outline" 
+            *ngIf="review.status === 'completed'"
+            (click)="downloadReview(review)"
+          >
+            <i class="bi bi-download"></i>
+            Download
+          </button>
+        </div>
+      </div>
+    </div>
+        
+        <div class="card-body">
+          <h3 class="paper-title">Quantum Computing Applications in Machine Learning: A Comprehensive Study</h3>
+          <p class="paper-abstract">This paper explores the integration of quantum computing principles with modern machine learning algorithms...</p>
+          
+          <div class="paper-meta">
+            <div class="meta-item">
+              <i class="bi bi-person"></i>
+              <span>Dr. Sarah Johnson</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-tags"></i>
+              <span>Quantum Computing, AI</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-file-earmark"></i>
+              <span>25 pages</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <button class="btn-secondary">
+            <i class="bi bi-eye"></i>
+            View Details
+          </button>
+          <button class="btn-primary">
+            <i class="bi bi-pencil-square"></i>
+            Start Review
+          </button>
+        </div>
+      </div>
+
+      <!-- Review Card 2 -->
+      <div class="review-card">
+        <div class="card-header">
+          <div class="paper-info">
+            <span class="paper-id">#PMS-2024-002</span>
+            <span class="status-badge in-progress">In Progress</span>
+          </div>
+          <div class="deadline normal">
+            <i class="bi bi-calendar-event"></i>
+            Due: Nov 12, 2025
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <h3 class="paper-title">Sustainable Energy Systems: Novel Approaches to Solar Panel Efficiency</h3>
+          <p class="paper-abstract">An investigation into advanced materials and designs that significantly improve solar panel performance...</p>
+          
+          <div class="paper-meta">
+            <div class="meta-item">
+              <i class="bi bi-person"></i>
+              <span>Prof. Michael Chen</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-tags"></i>
+              <span>Renewable Energy</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-file-earmark"></i>
+              <span>18 pages</span>
+            </div>
+          </div>
+          
+          <div class="progress-section">
+            <div class="progress-label">
+              <span>Review Progress</span>
+              <span class="progress-percent">65%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 65%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <button class="btn-secondary">
+            <i class="bi bi-eye"></i>
+            View Details
+          </button>
+          <button class="btn-primary">
+            <i class="bi bi-pencil-square"></i>
+            Continue Review
+          </button>
+        </div>
+      </div>
+
+      <!-- Review Card 3 -->
+      <div class="review-card">
+        <div class="card-header">
+          <div class="paper-info">
+            <span class="paper-id">#PMS-2024-003</span>
+            <span class="status-badge pending">Pending Review</span>
+          </div>
+          <div class="deadline normal">
+            <i class="bi bi-calendar-event"></i>
+            Due: Nov 18, 2025
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <h3 class="paper-title">Blockchain Technology in Healthcare: Security and Privacy Considerations</h3>
+          <p class="paper-abstract">This research examines the implementation of blockchain solutions for secure medical data management...</p>
+          
+          <div class="paper-meta">
+            <div class="meta-item">
+              <i class="bi bi-person"></i>
+              <span>Dr. Emily Rodriguez</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-tags"></i>
+              <span>Blockchain, Healthcare</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-file-earmark"></i>
+              <span>22 pages</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <button class="btn-secondary">
+            <i class="icon-eye"></i>
+            View Details
+          </button>
+          <button class="btn-primary">
+            <i class="icon-edit"></i>
+            Start Review
+          </button>
+        </div>
+      </div>
+
+      <!-- Review Card 4 -->
+      <div class="review-card completed-card">
+        <div class="card-header">
+          <div class="paper-info">
+            <span class="paper-id">#PMS-2024-004</span>
+            <span class="status-badge completed">Completed</span>
+          </div>
+          <div class="deadline completed">
+            <i class="bi bi-check-circle"></i>
+            Submitted: Oct 28, 2025
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <h3 class="paper-title">Neural Networks for Natural Language Processing: Recent Advances</h3>
+          <p class="paper-abstract">A comprehensive review of transformer architectures and their applications in NLP tasks...</p>
+          
+          <div class="paper-meta">
+            <div class="meta-item">
+              <i class="bi bi-person"></i>
+              <span>Dr. James Wilson</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-tags"></i>
+              <span>AI, NLP</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-file-earmark"></i>
+              <span>30 pages</span>
+            </div>
+          </div>
+          
+          <div class="review-summary">
+            <div class="summary-item">
+              <span class="summary-label">Your Rating:</span>
+              <span class="summary-value">8.5/10</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Recommendation:</span>
+              <span class="summary-value accepted">Accept with Minor Revisions</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <button class="btn-secondary">
+            <i class="bi bi-eye"></i>
+            View Review
+          </button>
+          <button class="btn-outline">
+            <i class="bi bi-download"></i>
+            Download
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && showEmptyState">
+      <div class="empty-icon">
+        <i class="bi bi-inbox"></i>
+      </div>
+      <h3 class="empty-title">No Reviews Found</h3>
+      <p class="empty-message" *ngIf="searchQuery">
+        No reviews match your search criteria. Try different keywords.
+      </p>
+      <p class="empty-message" *ngIf="!searchQuery && selectedStatus !== 'all'">
+        No reviews with {{ selectedStatus }} status.
+      </p>
+      <p class="empty-message" *ngIf="!searchQuery && selectedStatus === 'all'">
+        You don't have any papers assigned for review at the moment.
+      </p>
+      <button class="btn-primary" *ngIf="searchQuery || selectedStatus !== 'all'" (click)="filterByStatus('all'); searchQuery = ''; onSearch()">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+</div>
