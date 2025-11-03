@@ -44,6 +44,7 @@
 </div>
 
 <!-- 🕰️ History of Submissions -->
+<!-- 🕰️ History of Submissions -->
 <div class="dashboard-container" id="history">
     <h1>📜 History of Submissions</h1>
     <p class="subtitle">View all submitted manuscripts by users</p>
@@ -67,16 +68,12 @@
             </thead>
             <tbody>
                 <tr *ngFor="let record of submissionHistory">
-                    <td>{{ record?.username }}</td>
+                    <td>{{ record?.username || 'Author' }}</td>
                     <td>{{ record?.title }}</td>
                     <td>{{ record?.articleType }}</td>
                     <td>{{ record?.date | date:'mediumDate' }}</td>
                     <td>
-                        <ul class="file-list-mini">
-                            <li *ngFor="let file of record?.files || []">
-                                <a [href]="file.url" target="_blank">{{ file.name }}</a>
-                            </li>
-                        </ul>
+                        <button (click)="downloadPDF(record.id)" class="download-btn">⬇️ Download PDF</button>
                     </td>
                 </tr>
             </tbody>

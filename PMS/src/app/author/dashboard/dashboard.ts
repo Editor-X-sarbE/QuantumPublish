@@ -1,59 +1,66 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common'; // ✅ Import this
+import { CommonModule } from '@angular/common';
+// import { PublicationService } from '../services/publication.service';  // ✅ correct import
+import { PublicationService } from '@app/services/publication.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule], // ✅ Add CommonModule here
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
-export class Dashboard {
-  constructor(private router: Router) { }
+export class Dashboard implements OnInit {
 
-  navigateTo(path: string) {
-    this.router.navigate([path]);
+  submissionHistory: any[] = [];
+
+  constructor(
+    private router: Router,
+    private publicationService: PublicationService   // ✅ correctly injected here
+  ) {}
+
+  ngOnInit(): void {
+    this.loadSubmissions();
   }
 
-  // 🔹 Mock history data (can be fetched via API in real case)
-  submissionHistory = [
-    {
-      username: 'Rout',
-      title: 'AI-Powered Manuscript Analysis',
-      articleType: 'Original Research',
-      date: new Date('2025-10-20'),
-      files: [
-        { name: 'manuscript_john.pdf', url: '#' },
-        { name: 'supplementary.zip', url: '#' }
-      ]
-    },
-    {
-      username: 'Rout_1',
-      title: 'Deep Learning for Healthcare',
-      articleType: 'Review Article',
-      date: new Date('2025-10-23'),
-      files: [
-        { name: 'DL_healthcare.pdf', url: '#' }
-      ]
-    },
-    {
-      username: 'Rout_X',
-      title: 'Drug Business',
-      articleType: 'Review Article',
-      date: new Date('2025-10-23'),
-      files: [
-        { name: 'DL_healthcare.pdf', url: '#' }
-      ]
-    },
-    {
-      username: 'Rout_2',
-      title: 'Case Study: Cloud Migration Challenges',
-      articleType: 'Case Study',
-      date: new Date('2025-10-25'),
-      files: [
-        { name: 'cloud_case_study.pdf', url: '#' }
-      ]
-    }
-  ];
+  /** 🔹 Load all submissions from backend */
+  loadSubmissions(): void {
+    this.publicationService.getAllPublications().subscribe({
+      next: (data) => {                     // ✅ Correct syntax
+        this.submissionHistory = data.map((pub: any) => ({
+          id: pub.id,
+          username: pub.username || 'Author',
+          title: pub.title,
+          articleType: pub.articleType,
+          date: pub.submissionDate || new Date(),
+        }));
+      },
+      error: (err) => {                     // ✅ Correct syntax
+        console.error('Error loading submissions:', err);
+      }
+    });
+  }
+
+  /** 🔹 Download stored PDF file */
+  downloadPDF(id: number): void {
+    this.publicationService.downloadPDF(id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `publication_${id}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error downloading PDF:', err);
+        alert('❌ Failed to download PDF.');
+      }
+    });
+  }
+
+  navigateTo(path: string): void {
+    this.router.navigate([path]);
+  }
 }

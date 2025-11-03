@@ -6,17 +6,19 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PublicationService {
-  private apiUrl = 'http://localhost:8082/api/publications'; // ✅ match backend port
+  private apiUrl = 'http://localhost:8082/api/publications';
 
   constructor(private http: HttpClient) {}
 
-  /** Upload publication (PDF, metadata, etc.) */
-  uploadPublication(formData: FormData): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/upload`, formData);
-  }
-
-  /** ✅ Retrieve all stored publications */
   getAllPublications(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
+  }
+
+  downloadPDF(id: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/download/${id}`, { responseType: 'blob' });
+  }
+
+  uploadPublication(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/upload`, formData);
   }
 }
