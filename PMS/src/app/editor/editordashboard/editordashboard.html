@@ -1,0 +1,66 @@
+<div class="editor-dashboard">
+    <h1>📊 Editor Dashboard</h1>
+    <p class="subtitle">Real-time overview of manuscript activity</p>
+
+    <!-- 🔹 Statistics Panel -->
+    <div class="stats-grid">
+        <div class="stat-card total">Total: {{ stats.total }}</div>
+        <div class="stat-card approved">Approved: {{ stats.approved }}</div>
+        <div class="stat-card pending">Pending: {{ stats.pending }}</div>
+        <div class="stat-card revision">Under Revision: {{ stats.revision }}</div>
+        <div class="stat-card rejected">Rejected: {{ stats.rejected }}</div>
+    </div>
+
+    <!-- 🔹 Refresh Button -->
+    <div class="actions">
+        <button (click)="refreshData()">🔄 Refresh Data</button>
+    </div>
+
+    <!-- 🔹 Live Table -->
+    <div class="table-container">
+        <h2>Recent Manuscripts</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let sub of submissions">
+                    <td>{{ sub.id }}</td>
+                    <td>{{ sub.title }}</td>
+                    <td>{{ sub.username || 'Unknown' }}</td>
+                    <td>{{ sub.articleType }}</td>
+                    <td>
+                        <span [class]="sub.status | lowercase">{{ sub.status }}</span>
+                    </td>
+                    <td>{{ sub.submissionDate | date: 'shortDate' }}</td>
+                    <td>
+                        <button class="view-btn" (click)="viewSubmissionDetails(sub.id)">View</button>
+
+                        <!-- ✅ Approve button -->
+                        <button *ngIf="sub.status !== 'Approved'" class="approve-btn" (click)="approveManuscript(sub)">
+                            ✅ Approve
+                        </button>
+
+                        <!-- ✅ Reject button -->
+                        <button *ngIf="sub.status !== 'Rejected'" class="reject-btn" (click)="rejectManuscript(sub)">
+                            ❌ Reject
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p *ngIf="submissions.length === 0" class="empty">
+            No manuscripts available.
+        </p>
+    </div>
+</div>

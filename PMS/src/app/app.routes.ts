@@ -59,36 +59,36 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./browsearticles/newarticles/newarticles').then((m) => m.Newarticles),
     },
-{
-    path: 'oldarticles',
-    loadComponent: () =>
-        import('./browsearticles/oldarticles/oldarticles').then((m) => m.Oldarticles),
-},
-{
-  path: 'allsubmissions',
-  loadComponent: () =>
-    import('./editor/allsubmissions/allsubmissions').then((m) => m.Allsubmissions),
-},
-{
-  path: 'assignreviewers',
-  loadComponent: () =>
-    import('./editor/assignreviewers/assignreviewers').then((m) => m.Assignreviewers),
-},
-{
-  path: 'decisions',
-  loadComponent: () =>
-    import('./editor/decisions/decisions').then((m) => m.Decisions),
-},
-{
-  path: 'manageissues',
-  loadComponent: () =>
-    import('./editor/manageissues/manageissues').then((m) => m.Manageissues),
-},
-{
-    path:'dasboardeditor',
-    loadComponent: () =>
-      import('./editor/dasboardeditor/dasboardeditor').then((m) => m.Dasboardeditor),
-}
+    {
+        path: 'oldarticles',
+        loadComponent: () =>
+            import('./browsearticles/oldarticles/oldarticles').then((m) => m.Oldarticles),
+    },
+    {
+        path: 'allsubmissions',
+        loadComponent: () =>
+            import('./editor/allsubmissions/allsubmissions').then((m) => m.Allsubmissions),
+    },
+    {
+        path: 'assignreviewers',
+        loadComponent: () =>
+            import('./editor/assignreviewers/assignreviewers').then((m) => m.Assignreviewers),
+    },
+    {
+        path: 'decisions',
+        loadComponent: () =>
+            import('./editor/decisions/decisions').then((m) => m.Decisions),
+    },
+    {
+        path: 'manageissues',
+        loadComponent: () =>
+            import('./editor/manageissues/manageissues').then((m) => m.Manageissues),
+    },
+    {
+        path: 'editordashboard',
+        loadComponent: () =>
+            import('./editor/editordashboard/editordashboard').then((m) => m.Editordashboard),
+    }
 
 ];
 

@@ -1,0 +1,178 @@
+.editor-dashboard {
+    padding: 2rem;
+    background: #f9fafc;
+    min-height: 100vh;
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .subtitle {
+        color: #555;
+        margin-bottom: 1.5rem;
+    }
+
+    /* ✅ Stats cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        .stat-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 1rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+
+            &.total {
+                border-left: 5px solid #007bff;
+            }
+
+            &.approved {
+                border-left: 5px solid #28a745;
+            }
+
+            &.pending {
+                border-left: 5px solid #ffc107;
+            }
+
+            &.revision {
+                border-left: 5px solid #17a2b8;
+            }
+
+            &.rejected {
+                border-left: 5px solid #dc3545;
+            }
+        }
+    }
+
+    .actions {
+        text-align: right;
+        margin-bottom: 1rem;
+
+        button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+
+            &:hover {
+                background: #0056b3;
+            }
+        }
+    }
+
+    /* ✅ Table design */
+    .table-container {
+        background: #fff;
+        padding: 1.2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+
+            th,
+            td {
+                padding: 0.8rem;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+
+            th {
+                background: #f1f1f1;
+            }
+
+            tr:hover {
+                background: #f9f9f9;
+            }
+
+            /* ✅ Status colors */
+            .approved {
+                color: #28a745;
+                font-weight: 600;
+            }
+
+            .pending,
+            .under\ review {
+                color: #ffc107;
+                font-weight: 600;
+            }
+
+            .revision {
+                color: #17a2b8;
+                font-weight: 600;
+            }
+
+            .rejected {
+                color: #dc3545;
+                font-weight: 600;
+            }
+        }
+
+        /* ✅ Buttons */
+        .view-btn {
+            background: #17a2b8;
+            color: #fff;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+
+            &:hover {
+                background: #117a8b;
+            }
+        }
+
+        .approve-btn {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+
+            &:hover {
+                background: #218838;
+            }
+        }
+
+        .reject-btn {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+
+            &:hover {
+                background: #b02a37;
+            }
+        }
+
+        .empty {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+        }
+    }
+}
