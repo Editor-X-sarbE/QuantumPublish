@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { RouterLink } from '@angular/router';   // ✅ Correct import
+import { Router, RouterLink } from '@angular/router'; // ✅ Added Router import
 
 @Component({
   selector: 'app-login',
@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';   // ✅ Correct import
   styleUrls: ['./login.scss']
 })
 export class Login {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { } // ✅ Inject Router
 
   data = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -21,13 +21,20 @@ export class Login {
   public handleSubmit() {
     console.log('Form Data:', this.data.value);
 
-    this.http.post('http://localhost:8082/loginUser', this.data.value).subscribe((data: any) => {
-      console.log(data);
-      if (data === true) {
-        alert("Login Successful");
-        // window.location.href = "/dashboard";
-      } else {
-        alert("Login Failed");
+    this.http.post('http://localhost:8082/loginUser', this.data.value).subscribe({
+      next: (data: any) => {
+        console.log(data);
+
+        if (data === true) {
+          alert('Login Successful ✅');
+          this.router.navigate(['/home']); // ✅ Redirect to home page
+        } else {
+          alert('Invalid Email or Password ❌');
+        }
+      },
+      error: (err) => {
+        console.error('Login error:', err);
+        alert('Server error. Please try again later.');
       }
     });
   }
